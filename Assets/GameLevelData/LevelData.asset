@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a46b7d24fa18a2241b257ac1af5434a6, type: 3}
+  m_Name: LevelData
+  m_EditorClassIdentifier: 
+  numberOfDisks: 5
+  numberOfTowers: 3
+  diskMaterials:
+  - {fileID: 2100000, guid: 0f4307b9e3aabfa4baca8f49387f1db0, type: 2}
+  - {fileID: 2100000, guid: 3d9bdae5adfebcd4a8e363f747f03414, type: 2}
+  - {fileID: 2100000, guid: 01eb87677754e99488d1bc0dcb8896c1, type: 2}
+  - {fileID: 2100000, guid: 0c1f274f304e6a640a5b1a3d67cfb2a6, type: 2}
+  - {fileID: 2100000, guid: 2f52e4bd403ef01458f74d4c57472bd9, type: 2}
+  diskHeight: 120
+  diskScaleStep: 50
+  towerSpacing: 2
+  towerBaseHeight: 0.5
