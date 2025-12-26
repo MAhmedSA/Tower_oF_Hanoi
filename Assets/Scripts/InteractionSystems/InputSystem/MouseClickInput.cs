@@ -42,11 +42,4 @@ public class MouseClickInput : MonoBehaviour, IInputHandler
         }
     }
 
-    public void TryUndo() {
-        moveService.Undo();
-    }
-    public void TryRedo()
-    {
-        moveService.Redo();
-    }
 }

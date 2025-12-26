@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviour, IGameActions
 {
     [Header("Level Data")]
     [SerializeField] private LevelData levelData;
@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     [Header("Solver Parameters")]
     private ISolver solver;
     [Range(0,1)]
-    [SerializeField] float autoSolveSpeed = 0.5f;
+    [SerializeField] float delaySolve = 0.8f;
 
     [Header("Reset Section Variables")]
     private CommandInvoker invoker;
@@ -85,17 +85,21 @@ public class GameManager : MonoBehaviour
     // method to start auto solving the puzzle
     public void StartAutoSolve()
     {
-        StartCoroutine(solver.Solve(levelData.numberOfDisks, towers[0],towers[1],towers[2], autoSolveSpeed));
+        //reset the game if there are any moves made after that start solving
+        if (invoker.UndoStackCount > 0) {
+            ResetGame();
+        }
+
+        StartCoroutine(solver.Solve(levelData.numberOfDisks, towers[0],towers[1],towers[2], delaySolve));
     }
 
     //Reset the game by regenerating the level 
     public void ResetGame()
     {
-        //undo all moves
         while (invoker.UndoStackCount > 0)
         {
             invoker.Undo();
         }
-        invoker.Clear(); //remove all history after reset
+        invoker.Clear();
     }
 }

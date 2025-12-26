@@ -4,7 +4,9 @@ public class GameBootstrapper : MonoBehaviour
 {
     [SerializeField] private MouseClickInput mouseInput;
 
-    [SerializeField] private GameManager gameManager;   
+    [SerializeField] private GameManager gameManager;
+
+    [SerializeField] private UIManager uiManager;
 
     private MoveService moveService; // move service Variable to be injected
     private HanoiSolver hanoiSolver;// hanoi solver variable to be injected
@@ -30,6 +32,9 @@ public class GameBootstrapper : MonoBehaviour
 
         // Inject solver service into GameManger
         gameManager.SetSolver(hanoiSolver, invoker);
+
+        // Inject services neeeded  into UIManager
+        uiManager.Init(moveService, invoker, gameManager);
 
 
 
