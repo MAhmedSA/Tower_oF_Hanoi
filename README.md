@@ -1,4 +1,4 @@
-# 🧩 Tower of Hanoi – Unity AI Solver
+# 🧩 Tower of Hanoi
 
 A Unity-based implementation of the **Tower of Hanoi** puzzle featuring
 manual gameplay, undo/redo support, and an **AI auto-solver** designed
