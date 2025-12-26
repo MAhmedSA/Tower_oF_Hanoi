@@ -1,178 +1,111 @@
-🧩 Tower of Hanoi – Unity (AI Solver & Undo-Based Reset)
+# 🧩 Tower of Hanoi – Unity AI Solver
 
-This project is a Unity implementation of the Tower of Hanoi puzzle with both player interaction and an AI auto-solver.
-The system is designed using clean architecture principles, command pattern, and dependency injection to ensure scalability, testability, and maintainability.
+A Unity-based implementation of the **Tower of Hanoi** puzzle featuring
+manual gameplay, undo/redo support, and an **AI auto-solver** designed
+with clean architecture principles.
 
-🎮 Features
+---
 
-Manual disk movement with rule validation
+## 🚀 Features
 
-Undo / Redo functionality using Command Pattern
+- **Manual Disk Movement** with rule validation
+- **Undo / Redo System** using Command Pattern
+- **Move Counter** with single source of truth
+- **AI Auto-Solve** with adjustable speed
+- **Reset Game** without destroying objects
+- **Solve From Any State**
+- Clean and scalable architecture
 
-Move counter (single source of truth)
+---
 
-AI auto-solver with adjustable speed
+## 🧠 AI Solver Design
 
-Reset game without destroying objects
+### Why Recursion Instead of BFS
 
-Solve puzzle from any intermediate state
+The AI solver uses a **recursive algorithm**, which is the optimal solution
+for the Tower of Hanoi problem.
 
-Clean separation between UI, game logic, and services
+| Algorithm | Time Complexity |
+|---------|----------------|
+| BFS | **O(3ⁿ)** |
+| Recursive Hanoi | **O(2ⁿ − 1)** |
 
-🤖 AI Solver Design
-Why Recursion (Not BFS)
+- BFS explores all possible states → memory heavy
+- Recursive solution guarantees **minimum moves**
+- Deterministic and efficient
 
-The Tower of Hanoi problem is a classic recursive problem with a well-known optimal solution.
+---
 
-I intentionally implemented the AI solver using a recursive algorithm instead of Breadth-First Search (BFS).
+## 🔄 Solving From Any State
 
-Complexity Comparison
-Approach	Time Complexity	Notes
-BFS	O(3ⁿ)	Explores all possible states, memory heavy
-Recursive Hanoi Algorithm	O(2ⁿ − 1)	Optimal and deterministic
+The solver assumes a clean initial state.
+To support solving from **any intermediate configuration**:
 
-BFS quickly becomes impractical as the number of disks increases.
+- The game **undoes all moves** using command history
+- Command history is cleared
+- Solver runs from a valid base state
 
-The recursive solution guarantees the minimum number of moves.
+This avoids destroying or recreating game objects.
 
-No need to store or explore unnecessary states.
+---
 
-Solver Implementation
+## 🧱 Project Structure
 
-The solver follows the classic recursive steps:
+### Core Systems
 
-Move n-1 disks to the auxiliary tower
+`GameManager.cs`
+- Controls game flow (start, reset, auto-solve)
 
-Move the largest disk to the target tower
+`MoveService.cs`
+- Handles validated moves
+- Delegates undo/redo
 
-Move n-1 disks from auxiliary to target
+`CommandInvoker.cs`
+- Stores move history
+- Handles undo / redo
+- Provides move count
 
-This logic is implemented in HanoiSolver using an ISolver interface, allowing future solver strategies to be added without changing game logic.
+`HanoiSolver.cs`
+- Recursive AI solver
+- Implements `ISolver`
 
-🔄 Solving From Any State
-Problem
+`UIManager.cs`
+- Manages UI buttons and move counter
+- Decoupled via interfaces
 
-The recursive Hanoi algorithm assumes a clean initial state (all disks on the first tower).
-However, players can:
+`GameBootstrapper.cs`
+- Wires dependencies
+- Handles dependency injection
 
-Make manual moves
+---
 
-Undo / redo moves
+## 🧠 Architecture Overview
 
-Leave the game in a partial state
+- **Command Pattern** for undo/redo/reset
+- **Dependency Injection** via bootstrapper
+- **Interface-based design** for loose coupling
+- **Single Responsibility Principle**
 
-Solution
+---
 
-Before auto-solving:
+## 🧪 Reset Strategy
 
-The game resets using undo history, not object destruction
+Instead of regenerating the level:
 
-All previous moves are undone via CommandInvoker
+- Undo all executed commands
+- Clear command history
+- Maintain object references
 
-Command history is cleared
+This ensures a clean and fast reset.
 
-The solver then runs from a guaranteed valid base state
+---
 
-Benefits
+## 📌 Summary
 
-AI can solve the puzzle from any situation
+This project demonstrates:
 
-No need to regenerate towers or disks
-
-Keeps object references intact
-
-Avoids state corruption
-
-🧠 Architecture Overview
-
-The project follows separation of concerns:
-
-Core Layers
-
-GameManager
-
-Orchestrates game flow (start, reset, auto-solve)
-
-MoveService
-
-Executes validated moves
-
-Delegates undo/redo to CommandInvoker
-
-CommandInvoker
-
-Stores move history
-
-Handles undo / redo
-
-Provides move count
-
-HanoiSolver
-
-AI logic using recursion
-
-UIManager
-
-Handles buttons and move counter
-
-Depends on interfaces, not concrete game systems
-
-GameBootstrapper
-
-Creates and injects all dependencies
-
-🎯 Design Patterns Used
-
-Command Pattern
-For move execution, undo, redo, and reset
-
-Dependency Injection
-Services are created and wired in a single bootstrapper
-
-Interface-Based Design
-UI and solver depend on abstractions, not implementations
-
-Single Responsibility Principle (SRP)
-Each system has one clear purpose
-
-🧪 Reset Strategy
-
-Instead of destroying and recreating the level:
-
-Reset is performed by undoing all executed commands
-
-Command history is cleared afterward
-
-This allows:
-
-Faster reset
-
-Cleaner state management
-
-Easy replay and debugging
-
-🚀 Future Improvements
-
-Animated undo/redo transitions
-
-Step-by-step AI solve visualization
-
-Multiple solver strategies (heuristic / visual)
-
-Save & load puzzle state
-
-Difficulty scaling with disk count
-
-📌 Summary
-
-This project focuses not only on solving the Tower of Hanoi puzzle, but on building a clean, extensible system that demonstrates:
-
-Algorithmic decision-making
-
-Proper complexity analysis
-
-Clean Unity architecture
-
-Real-world undo/redo systems
-
-AI integration with gameplay
+- Algorithmic decision-making
+- Clean Unity architecture
+- AI integration with gameplay
+- Professional undo/redo systems
+- Scalable UI-to-logic separation
