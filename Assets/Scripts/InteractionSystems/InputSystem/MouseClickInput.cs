@@ -41,4 +41,12 @@ public class MouseClickInput : MonoBehaviour, IInputHandler
             selectedTower = null;
         }
     }
+
+    public void TryUndo() {
+        moveService.Undo();
+    }
+    public void TryRedo()
+    {
+        moveService.Redo();
+    }
 }

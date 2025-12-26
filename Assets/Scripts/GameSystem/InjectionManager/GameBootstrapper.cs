@@ -4,7 +4,10 @@ public class GameBootstrapper : MonoBehaviour
 {
     [SerializeField] private MouseClickInput mouseInput;
 
-    private MoveService moveService;
+    [SerializeField] private GameManager gameManager;   
+
+    private MoveService moveService; // move service Variable to be injected
+    private HanoiSolver hanoiSolver;// hanoi solver variable to be injected
 
     void Awake()
     {
@@ -19,9 +22,16 @@ public class GameBootstrapper : MonoBehaviour
 
         // Create MoveService (THIS answers your question)
         moveService = new MoveService(validator, invoker);
+        //Create solver Service
+        hanoiSolver = new HanoiSolver(moveService);
 
         // Inject into input
         mouseInput.SetMoveService(moveService);
+
+        // Inject solver service into GameManger
+        gameManager.SetSolver(hanoiSolver, invoker);
+
+
 
     }
 }

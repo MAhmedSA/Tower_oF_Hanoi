@@ -14,5 +14,8 @@ public class PlayerInput : MonoBehaviour
     void Update()
     {
         handler?.HandleInput();
+        
     }
+    
+
 }

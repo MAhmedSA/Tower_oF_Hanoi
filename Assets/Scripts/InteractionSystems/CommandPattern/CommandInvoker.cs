@@ -4,7 +4,8 @@ public class CommandInvoker
 {
     private Stack<ICommand> undoStack = new();
     private Stack<ICommand> redoStack = new();
-
+    public int UndoStackCount => undoStack.Count;
+    public int RedoStackCount => undoStack.Count;
     public void Execute(ICommand command)
     {
         command.Execute();
@@ -28,5 +29,11 @@ public class CommandInvoker
         var cmd = redoStack.Pop();
         cmd.Execute();
         undoStack.Push(cmd);
+    }
+    
+    public void Clear()
+    {
+        undoStack.Clear();
+        redoStack.Clear();
     }
 }

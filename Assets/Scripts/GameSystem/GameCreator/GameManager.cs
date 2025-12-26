@@ -17,17 +17,31 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private Tower[] towers;
 
+    [Header("Solver Parameters")]
+    private ISolver solver;
+    [Range(0,1)]
+    [SerializeField] float autoSolveSpeed = 0.5f;
+
+    [Header("Reset Section Variables")]
+    private CommandInvoker invoker;
     void Start()
     {
         GenerateLevel();
     }
-
+    // Inject Solver Service from Bootstrapper
+    public void SetSolver(ISolver solver, CommandInvoker invoker)
+    {
+        this.solver = solver;
+        this.invoker = invoker;
+    }
+    // Generate Level based on level data
     private void GenerateLevel()
     {
         GenerateTowers();
         GenerateDisks();
     }
 
+    // Generate Towers based on level data
     private void GenerateTowers()
     {
         towers = new Tower[levelData.numberOfTowers];
@@ -50,7 +64,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
+    // Generate Disks and place them on the first tower
     private void GenerateDisks()
     {
         Tower startTower = towers[0];
@@ -67,5 +81,21 @@ public class GameManager : MonoBehaviour
 
             startTower.Push(disk);
         }
+    }
+    // method to start auto solving the puzzle
+    public void StartAutoSolve()
+    {
+        StartCoroutine(solver.Solve(levelData.numberOfDisks, towers[0],towers[1],towers[2], autoSolveSpeed));
+    }
+
+    //Reset the game by regenerating the level 
+    public void ResetGame()
+    {
+        //undo all moves
+        while (invoker.UndoStackCount > 0)
+        {
+            invoker.Undo();
+        }
+        invoker.Clear(); //remove all history after reset
     }
 }
