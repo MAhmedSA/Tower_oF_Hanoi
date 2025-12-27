@@ -4,11 +4,16 @@ public class MouseClickInput : MonoBehaviour, IInputHandler
 {
     public Camera cam;
     MoveService moveService;
-
+    private IFeedbackService feedbackService;
     private Tower selectedTower;
     public void SetMoveService(MoveService service)
     {
         moveService = service;
+    }
+
+    public void SetFeedbackService(IFeedbackService feedback)
+    {
+        feedbackService = feedback;
     }
     public void HandleInput()
     {
@@ -33,11 +38,18 @@ public class MouseClickInput : MonoBehaviour, IInputHandler
         if (selectedTower == null)
         {
             selectedTower = tower;
+            feedbackService?.PlaySelectTower(tower);
+        }
+        else if (selectedTower == tower)
+        {
+            feedbackService?.PlayDeselectTower(tower);
+            selectedTower = null;
         }
         else
         {
-            Debug.Log("Attempting move from " + selectedTower.name + " to " + tower.name);
             moveService.TryMove(selectedTower, tower);
+      
+            feedbackService?.PlayDeselectTower(selectedTower);
             selectedTower = null;
         }
     }

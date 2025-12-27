@@ -23,6 +23,7 @@ public class UIManager : MonoBehaviour
         this.gameActions = gameActions;
 
         BindButtons();
+        BindNotifyText();
         UpdateMoveCounter();
     }
 
@@ -31,12 +32,12 @@ public class UIManager : MonoBehaviour
         undoButton.onClick.AddListener(() =>
         {
             moveService.Undo();
-            UpdateMoveCounter();
+          
         });
         redoButton.onClick.AddListener(() =>
         {
             moveService.Redo();
-            UpdateMoveCounter();
+           
         });
         resetButton.onClick.AddListener(() =>
         {
@@ -44,10 +45,15 @@ public class UIManager : MonoBehaviour
             invoker.Clear();
             UpdateMoveCounter();
         });
-        
+
+       
 
     }
+    void  BindNotifyText() {
 
+        moveService.OnMoveExecuted += UpdateMoveCounter;
+
+    }
     void UpdateMoveCounter()
     {
         moveCounterText.text = $"Moves: {invoker.UndoStackCount}";

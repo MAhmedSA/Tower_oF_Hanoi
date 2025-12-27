@@ -1,13 +1,15 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Tower : MonoBehaviour
 {
     private Stack<Disk> disks = new Stack<Disk>();
-
+    [SerializeField] private MonoBehaviour feedbackTarget;
+    public IFeedbackTarget Feedback => feedbackTarget as IFeedbackTarget;
     public void Init(float diskHeight)
     {
-       //transform.localScale = new Vector3(transform.localScale.x, diskHeight, transform.localScale.z);
+        //transform.localScale = new Vector3(transform.localScale.x, diskHeight, transform.localScale.z);
     }
 
     public bool CanPlace(Disk disk)
@@ -30,4 +32,6 @@ public class Tower : MonoBehaviour
     {
         return disks.Count > 0 ? disks.Peek() : null;
     }
+
+
 }

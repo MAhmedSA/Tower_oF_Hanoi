@@ -8,8 +8,6 @@ public class GameBootstrapper : MonoBehaviour
 
     [SerializeField] private UIManager uiManager;
 
-    private MoveService moveService; // move service Variable to be injected
-    private HanoiSolver hanoiSolver;// hanoi solver variable to be injected
 
     void Awake()
     {
@@ -23,12 +21,18 @@ public class GameBootstrapper : MonoBehaviour
         CommandInvoker invoker = new CommandInvoker();
 
         // Create MoveService (THIS answers your question)
-        moveService = new MoveService(validator, invoker);
+        MoveService moveService = new MoveService(validator, invoker);
         //Create solver Service
-        hanoiSolver = new HanoiSolver(moveService);
+        HanoiSolver hanoiSolver = new HanoiSolver(moveService);
+        IFeedbackService feedbackService = new FeedbackService();
 
         // Inject into input
         mouseInput.SetMoveService(moveService);
+        //Inject feedback service into input
+        mouseInput.SetFeedbackService(feedbackService);
+
+        // Subscribe feedback service to move service events
+        moveService.OnInvalidMove += feedbackService.PlayInvalidMove;
 
         // Inject solver service into GameManger
         gameManager.SetSolver(hanoiSolver, invoker);
