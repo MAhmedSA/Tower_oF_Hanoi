@@ -1,10 +1,11 @@
+using System.Collections;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour, IGameActions
 {
     [Header("Level Data")]
     [SerializeField] private LevelData levelData;
-
+   
     [Header("Prefabs")]
     [SerializeField] private Tower towerPrefab;
     [SerializeField] private Disk diskPrefab;
@@ -19,13 +20,20 @@ public class GameManager : MonoBehaviour, IGameActions
 
     [Header("Solver Parameters")]
     private ISolver solver;
-    [Range(0,1)]
+    [Range(0.4f,2f)]
     [SerializeField] float delaySolve = 0.8f;
 
     [Header("Reset Section Variables")]
     private CommandInvoker invoker;
+
+    [Header("GameState Section")]
+    public GameState CurrentState { get; private set; } = GameState.Manual;
+
+    public event System.Action<GameState> OnGameStateChanged;
+
     void Start()
     {
+       
         GenerateLevel();
     }
     // Inject Solver Service from Bootstrapper
@@ -51,14 +59,15 @@ public class GameManager : MonoBehaviour, IGameActions
 
         float startX = playAreaCenter.position.x - totalWidth / 2f;
 
+        float halfTowerWidth = (levelData.diskHeight * levelData.numberOfDisks) / 2;
         for (int i = 0; i < levelData.numberOfTowers; i++)
         {
-            Vector3 position = new Vector3( startX + spacing * i, playAreaCenter.position.y, playAreaCenter.position.z );
+            Vector3 position = new Vector3( startX + spacing * i, playAreaCenter.position.y, playAreaCenter.position.z);
 
             Tower tower = Instantiate(towerPrefab);
             tower.transform.position = position;
             tower.transform.parent = playAreaCenter;
-            tower.Init(levelData.diskHeight);
+            tower.Init(halfTowerWidth+levelData.towerBaseHeight);
 
             towers[i] = tower;
         }
@@ -82,15 +91,23 @@ public class GameManager : MonoBehaviour, IGameActions
             startTower.Push(disk);
         }
     }
+
+    public void AutoSolving() { 
+        StartCoroutine(StartAutoSolve());
+    }
     // method to start auto solving the puzzle
-    public void StartAutoSolve()
+    IEnumerator StartAutoSolve()
     {
         //reset the game if there are any moves made after that start solving
         if (invoker.UndoStackCount > 0) {
             ResetGame();
         }
+        SetState(GameState.AutoSolving);
 
-        StartCoroutine(solver.Solve(levelData.numberOfDisks, towers[0],towers[1],towers[2], delaySolve));
+        //Start the solving coroutine
+        yield return StartCoroutine(solver.Solve(levelData.numberOfDisks, towers[0],towers[1],towers[2], delaySolve));
+
+        SetState(GameState.Manual);
     }
 
     //Reset the game by regenerating the level 
@@ -101,5 +118,11 @@ public class GameManager : MonoBehaviour, IGameActions
             invoker.Undo();
         }
         invoker.Clear();
+    }
+
+    private void SetState(GameState newState)
+    {
+        CurrentState = newState;
+        OnGameStateChanged?.Invoke(newState);
     }
 }

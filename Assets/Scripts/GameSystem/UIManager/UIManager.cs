@@ -2,12 +2,14 @@ using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
 
+
 public class UIManager : MonoBehaviour
 {
     [Header("Buttons")]
     [SerializeField] private Button undoButton;
     [SerializeField] private Button redoButton;
     [SerializeField] private Button resetButton;
+    [SerializeField] private Button autoSolveButton;
 
     [Header("Texts")]
     [SerializeField] private TMP_Text moveCounterText;
@@ -25,6 +27,7 @@ public class UIManager : MonoBehaviour
         BindButtons();
         BindNotifyText();
         UpdateMoveCounter();
+        this.gameActions.OnGameStateChanged += HandleGameStateChanged;
     }
 
     private void BindButtons()
@@ -45,8 +48,10 @@ public class UIManager : MonoBehaviour
             invoker.Clear();
             UpdateMoveCounter();
         });
-
-       
+        autoSolveButton.onClick.AddListener(() =>
+        {
+            gameActions.AutoSolving();
+        });
 
     }
     void  BindNotifyText() {
@@ -57,5 +62,17 @@ public class UIManager : MonoBehaviour
     void UpdateMoveCounter()
     {
         moveCounterText.text = $"Moves: {invoker.UndoStackCount}";
+    }
+
+    private void HandleGameStateChanged(GameState state)
+    {
+        bool isAutoSolving = state == GameState.AutoSolving;
+
+        undoButton.interactable = !isAutoSolving;
+        redoButton.interactable = !isAutoSolving;
+
+       
+        resetButton.interactable = !isAutoSolving;
+        autoSolveButton.interactable = !isAutoSolving;
     }
 }

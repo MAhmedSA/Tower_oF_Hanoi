@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a46b7d24fa18a2241b257ac1af5434a6, type: 3}
   m_Name: LevelData
   m_EditorClassIdentifier: 
-  numberOfDisks: 5
+  numberOfDisks: 6
   numberOfTowers: 3
   diskMaterials:
   - {fileID: 2100000, guid: 0f4307b9e3aabfa4baca8f49387f1db0, type: 2}
@@ -23,4 +23,4 @@ MonoBehaviour:
   diskHeight: 120
   diskScaleStep: 50
   towerSpacing: 2
-  towerBaseHeight: 0.5
+  towerBaseHeight: 300

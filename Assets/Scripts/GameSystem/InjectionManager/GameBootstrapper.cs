@@ -8,7 +8,7 @@ public class GameBootstrapper : MonoBehaviour
 
     [SerializeField] private UIManager uiManager;
 
-
+    [SerializeField] private DiskMoveAnimationService diskMoveAnimationService;
     void Awake()
     {
         BuildDependencies();
@@ -20,10 +20,10 @@ public class GameBootstrapper : MonoBehaviour
         IMoveValidator validator = new HanoiMoveValidator();
         CommandInvoker invoker = new CommandInvoker();
 
-        // Create MoveService (THIS answers your question)
+        // Create MoveService 
         MoveService moveService = new MoveService(validator, invoker);
         //Create solver Service
-        HanoiSolver hanoiSolver = new HanoiSolver(moveService);
+        HanoiSolver hanoiSolver = new HanoiSolver(moveService, diskMoveAnimationService);
         IFeedbackService feedbackService = new FeedbackService();
 
         // Inject into input
@@ -39,6 +39,8 @@ public class GameBootstrapper : MonoBehaviour
 
         // Inject services neeeded  into UIManager
         uiManager.Init(moveService, invoker, gameManager);
+        // Inject move service into DiskMoveAnimationService
+        diskMoveAnimationService.Initialize(moveService);
 
 
 

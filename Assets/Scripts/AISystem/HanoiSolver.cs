@@ -4,10 +4,11 @@ using UnityEngine;
 public class HanoiSolver : ISolver
 {
     private MoveService moveService;
-
-    public HanoiSolver(MoveService moveService)
+    private DiskMoveAnimationService animationService;
+    public HanoiSolver(MoveService moveService, DiskMoveAnimationService animationService)
     {
         this.moveService = moveService;
+        this.animationService = animationService;
     }
 
     public IEnumerator Solve(int n,Tower from,Tower aux, Tower to,float delay)
@@ -20,6 +21,11 @@ public class HanoiSolver : ISolver
 
         // Move largest disk
         moveService.TryMove(from, to);
+
+        // wait until animation finishes
+        yield return new WaitUntil(() => !animationService.IsAnimating);
+
+        // optional delay BETWEEN moves
         yield return new WaitForSeconds(delay);
 
         // Move n-1 disks to target tower

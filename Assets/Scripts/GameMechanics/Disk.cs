@@ -13,7 +13,7 @@ public class Disk : MonoBehaviour
         if (diskRenderer != null && material != null)
             diskRenderer.material = material;
 
-        // Optional: scale disk by size
+        //scale disk by size
         float scale = 100 + size * stepSize;
         transform.localScale = new Vector3(scale,  scale, diskHight);
     }
